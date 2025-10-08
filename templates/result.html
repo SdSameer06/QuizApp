@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Results{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8 text-center">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Quiz Results</h2>
+                
+                <div class="result-circle mb-4">
+                    <h1 class="display-1 text-{{ 'success' if percentage >= 70 else 'danger' }}">{{ percentage|round|int }}%</h1>
+                </div>
+                
+                <p class="lead">You got <strong>{{ score }}</strong> out of <strong>{{ total }}</strong> questions correct!</p>
+                
+                {% if percentage >= 70 %}
+                    <p class="text-success">Congratulations! You passed the quiz!</p>
+                {% else %}
+                    <p class="text-danger">Keep practicing to improve your score!</p>
+                {% endif %}
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('quiz') }}" class="btn btn-primary me-2">Take Another Quiz</a>
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

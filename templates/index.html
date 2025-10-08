@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <h1>Quiz App</h1>
+            <div id="navButtons">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </nav>
+
+        <div class="section active">
+            <div id="welcomeSection">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication status
+        async function checkAuth() {
+            try {
+                const response = await fetch('/check_auth');
+                const data = await response.json();
+                if (data.authenticated) {
+                    showAuthenticatedUI(data.username);
+                } else {
+                    showUnauthenticatedUI();
+                }
+            } catch (error) {
+                console.error('Error checking auth:', error);
+                showUnauthenticatedUI();
+            }
+        }
+
+        function showAuthenticatedUI(username) {
+            // Update navigation
+            document.getElementById('navButtons').innerHTML = `
+                <button onclick="logout()" class="btn">Logout</button>
+            `;
+
+            // Update welcome section
+            document.getElementById('welcomeSection').innerHTML = `
+                <h2>Welcome, ${username}!</h2>
+                <div class="action-buttons">
+                    <button onclick="window.location.href='/quiz'" class="btn">Take Quiz</button>
+                    <button onclick="window.location.href='/add'" class="btn">Add Questions</button>
+                    <button onclick="window.location.href='/list_questions'" class="btn">View All Questions</button>
+                    <button onclick="window.location.href='/view_results'" class="btn">View Results</button>
+                </div>
+            `;
+        }
+
+        function showUnauthenticatedUI() {
+            // Update welcome section for non-authenticated users
+            document.getElementById('welcomeSection').innerHTML = `
+                <h2>Welcome to Quiz App</h2>
+                <p>Please login or register to continue</p>
+                <div class="action-buttons">
+                    <button onclick="window.location.href='/login'" class="btn">Login</button>
+                    <button onclick="window.location.href='/register'" class="btn">Register</button>
+                </div>
+            `;
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch('/logout');
+                const data = await response.json();
+                if (data.success) {
+                    window.location.href = '/';
+                } else {
+                    alert('Logout failed');
+                }
+            } catch (error) {
+                alert('An error occurred during logout');
+            }
+        }
+
+        // Check auth status when page loads
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html> 

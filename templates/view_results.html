@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results - Quiz App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <h1>Quiz Results</h1>
+            <a href="{{ url_for('index') }}" class="btn">Back to Home</a>
+        </nav>
+        
+        <div class="section active">
+            {% if results %}
+                {% for result in results %}
+                    <div class="result-card">
+                        <h3>Quiz Attempt - {{ result.date.strftime('%Y-%m-%d %H:%M:%S') }}</h3>
+                        <p>Score: {{ result.score }}/{{ result.total }} ({{ result.percentage }}%)</p>
+                        <span class="badge {% if result.passed %}pass{% else %}fail{% endif %}">
+                            {% if result.passed %}PASSED{% else %}FAILED{% endif %}
+                        </span>
+                        <pre class="result-content">{{ result.content }}</pre>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">
+                    <p>No quiz results found. Take a quiz to see your results here!</p>
+                    <a href="{{ url_for('quiz') }}" class="btn">Take a Quiz</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Quiz App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <h1>Quiz Time</h1>
+            <button onclick="window.location.href='/'" class="btn">Back to Home</button>
+        </nav>
+
+        <div class="section active" id="quizContent">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Check authentication and load quiz content
+        async function initQuiz() {
+            try {
+                const authResponse = await fetch('/check_auth');
+                const authData = await authResponse.json();
+                
+                if (!authData.authenticated) {
+                    window.location.href = '/login';
+                    return;
+                }
+
+                // Load quiz content
+                const urlParams = new URLSearchParams(window.location.search);
+                const difficulty = urlParams.get('difficulty');
+
+                if (!difficulty) {
+                    showDifficultySelection();
+                } else {
+                    loadQuestions(difficulty);
+                }
+            } catch (error) {
+                alert('Error loading quiz');
+            }
+        }
+
+        function showDifficultySelection() {
+            const difficulties = ['easy', 'medium', 'hard'];
+            const content = `
+                <div class="difficulty-selection">
+                    <h2>Select Difficulty</h2>
+                    <div class="difficulty-buttons">
+                        ${difficulties.map(diff => `
+                            <button onclick="selectDifficulty('${diff}')" class="btn">
+                                ${diff.charAt(0).toUpperCase() + diff.slice(1)}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.getElementById('quizContent').innerHTML = content;
+        }
+
+        async function selectDifficulty(difficulty) {
+            try {
+                const response = await fetch('/quiz', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ difficulty })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    loadQuestions(difficulty);
+                } else {
+                    alert(data.message || 'No questions available');
+                }
+            } catch (error) {
+                alert('Error selecting difficulty');
+            }
+        }
+
+        async function loadQuestions(difficulty) {
+            try {
+                const response = await fetch(`/get_questions?difficulty=${difficulty}`);
+                const data = await response.json();
+                
+                if (data.success && data.questions.length > 0) {
+                    showQuestions(data.questions, difficulty);
+                } else {
+                    alert('No questions available for this difficulty');
+                    showDifficultySelection();
+                }
+            } catch (error) {
+                alert('Error loading questions');
+            }
+        }
+
+        function showQuestions(questions, difficulty) {
+            const content = `
+                <form id="quizForm">
+                    <h2>${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} Quiz</h2>
+                    ${questions.map((question, index) => `
+                        <div class="question-card">
+                            <h3>Question ${index + 1}</h3>
+                            <p>${question.question}</p>
+                            <div class="options">
+                                ${question.options.map(option => `
+                                    <label>
+                                        <input type="radio" name="answer_${index}" value="${option}" required>
+                                        ${option}
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                    <input type="hidden" name="difficulty" value="${difficulty}">
+                    <button type="submit">Submit Quiz</button>
+                </form>
+            `;
+            document.getElementById('quizContent').innerHTML = content;
+
+            // Add form submission handler
+            document.getElementById('quizForm').addEventListener('submit', submitQuiz);
+        }
+
+        async function submitQuiz(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    setTimeout(() => {
+                        window.location.href = '/view_results';
+                    }, 1500);
+                } else {
+                    alert(data.message || 'Error submitting quiz');
+                }
+            } catch (error) {
+                alert('Error submitting quiz');
+            }
+        }
+
+        // Initialize quiz when page loads
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html> 

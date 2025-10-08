@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Add Question{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Add New Question</h2>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="question_text" class="form-label">Question</label>
+                        <textarea class="form-control" id="question_text" name="question_text" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="option_a" class="form-label">Option A</label>
+                        <input type="text" class="form-control" id="option_a" name="option_a" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="option_b" class="form-label">Option B</label>
+                        <input type="text" class="form-control" id="option_b" name="option_b" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="option_c" class="form-label">Option C</label>
+                        <input type="text" class="form-control" id="option_c" name="option_c" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="option_d" class="form-label">Option D</label>
+                        <input type="text" class="form-control" id="option_d" name="option_d" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="correct_answer" class="form-label">Correct Answer</label>
+                        <select class="form-select" id="correct_answer" name="correct_answer" required>
+                            <option value="">Select correct answer</option>
+                            <option value="A">Option A</option>
+                            <option value="B">Option B</option>
+                            <option value="C">Option C</option>
+                            <option value="D">Option D</option>
+                        </select>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Add Question</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

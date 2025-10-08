@@ -1,0 +1,138 @@
+.section {
+    display: none;
+}
+.active {
+    display: block;
+}
+.result-card {
+    margin-bottom: 15px;
+}
+.navbar {
+    display: none;
+}
+.logged-in .navbar {
+    display: flex;
+}
+.difficulty-btn {
+    margin: 10px;
+    padding: 20px 40px;
+    font-size: 1.2em;
+}
+.easy {
+    background-color: #28a745;
+    color: white;
+}
+.medium {
+    background-color: #ffc107;
+    color: black;
+}
+.hard {
+    background-color: #dc3545;
+    color: white;
+}
+.question-card {
+    margin-bottom: 20px;
+    border-left: 4px solid;
+}
+.question-card.easy {
+    border-left-color: #28a745;
+}
+.question-card.medium {
+    border-left-color: #ffc107;
+}
+.question-card.hard {
+    border-left-color: #dc3545;
+}
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.toast-notification {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    min-width: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideIn 0.3s ease-out;
+    transform-origin: top right;
+}
+.toast-notification.success {
+    border-left: 4px solid #28a745;
+    background: linear-gradient(to right, #f8fff9, white);
+}
+.toast-notification.error {
+    border-left: 4px solid #dc3545;
+    background: linear-gradient(to right, #fff8f8, white);
+}
+.toast-notification .message {
+    margin-right: 10px;
+    font-weight: 500;
+}
+.toast-notification .close-btn {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.toast-notification .close-btn:hover {
+    background: rgba(0,0,0,0.1);
+}
+.progress-bar {
+    transition: width 0.5s ease-in-out;
+}
+@keyframes slideIn {
+    from { 
+        transform: translateX(120%) scale(0.9);
+        opacity: 0;
+    }
+    to { 
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+@keyframes slideOut {
+    to { 
+        transform: translateX(120%) scale(0.9);
+        opacity: 0;
+    }
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+}
+.modal.show {
+    display: block;
+}
+.modal-content {
+    background: white;
+    margin: 10% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 5px;
+    position: relative;
+}
+.close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+} 
